@@ -36,12 +36,9 @@ class HEPnOS_server(ApplicationDefinition):
         )
         return preamble
 
-    command_template = (
-        "-p {{ pdomain }} bedrock ofi+gni -c {{ hepnos_config }} -v info &> server-log"
-    )
+    command_template = "bedrock ofi+gni -c {{ hepnos_config }} -v info &> server-log"
 
     parameters = {
-        "pdomain": {"required": True},
         "hepnos_config": {"required": True},
     }
 
@@ -101,12 +98,7 @@ class HEPnOS_list_dbs(ApplicationDefinition):
         )
         return preamble
 
-    command_template = (
-        "-p {{ pdomain }} hepnos-list-databases ofi+gni -s hepnos.ssg > out.json"
-    )
-    parameters = {
-        "pdomain": {"required": True},
-    }
+    command_template = "hepnos-list-databases ofi+gni -s hepnos.ssg > out.json"
 
     def postprocess(self) -> None:
         workdir: PurePath = PurePath(Path.cwd())
@@ -183,10 +175,7 @@ class HEPnOS_queue(ApplicationDefinition):
         )
         return preamble
 
-    command_template = "-p {{ pdomain }} /projects/HEP_on_HPC/sajid/icarus_hepnos/icaruswf/build/src/modules/cheesyQueue_maker ofi+gni connection.json DetSim HitFinding"
-    parameters = {
-        "pdomain": {"required": True},
-    }
+    command_template = "/projects/HEP_on_HPC/sajid/icarus_hepnos/icaruswf/build/src/modules/cheesyQueue_maker ofi+gni connection.json DetSim HitFinding"
 
 
 HEPnOS_queue.sync()
@@ -240,10 +229,9 @@ class HEPnOS_load(ApplicationDefinition):
         )
         return preamble
 
-    command_template = "-p {{ pdomain }} /projects/HEP_on_HPC/sajid/icarus_hepnos/icaruswf/build/src/modules/mpi_wrapper -H --num_evts_per_rank 1 --root_file_path {{ input_filename }}"
+    command_template = "/projects/HEP_on_HPC/sajid/icarus_hepnos/icaruswf/build/src/modules/mpi_wrapper -H --num_evts_per_rank 1 --root_file_path {{ input_filename }}"
 
     parameters = {
-        "pdomain": {"required": True},
         "input_filename": {"required": True},
     }
 
@@ -299,10 +287,9 @@ class HEPnOS_process(ApplicationDefinition):
         )
         return preamble
 
-    command_template = "-p {{ pdomain }} /projects/HEP_on_HPC/sajid/icarus_hepnos/icaruswf/build/src/modules/mpi_wrapper -H -p -t {{client_hwthreads_perrank}} --num_evts_per_rank 1"
+    command_template = "/projects/HEP_on_HPC/sajid/icarus_hepnos/icaruswf/build/src/modules/mpi_wrapper -H -p -t {{client_hwthreads_perrank}} --num_evts_per_rank 1"
 
     parameters = {
-        "pdomain": {"required": True},
         "client_hwthreads_perrank": {"required": True},
     }
 
@@ -358,8 +345,7 @@ class HEPnOS_shutdown(ApplicationDefinition):
         )
         return preamble
 
-    command_template = "-p {{ pdomain }} hepnos-shutdown ofi+gni connection.json"
-    parameters = {"pdomain": {"required": True}}
+    command_template = "hepnos-shutdown ofi+gni connection.json"
 
 
 HEPnOS_shutdown.sync()

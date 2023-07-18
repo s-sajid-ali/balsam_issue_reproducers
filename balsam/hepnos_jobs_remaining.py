@@ -31,7 +31,7 @@ job_list_dbs = Job.objects.create(
     threads_per_rank=1,
     threads_per_core=1,
     node_packing_count=1,
-    parameters={"pdomain": site_def.PDOMAIN},
+    launch_params={"-p": str(site_def.PDOMAIN)},
 )
 assert job_list_dbs.id is not None
 
@@ -45,7 +45,7 @@ job_queue = Job.objects.create(
     threads_per_core=1,
     node_packing_count=1,
     parent_ids=[job_list_dbs.id],
-    parameters={"pdomain": site_def.PDOMAIN},
+    launch_params={"-p": str(site_def.PDOMAIN)},
 )
 assert job_queue.id is not None
 
@@ -62,9 +62,9 @@ job_load = [
         node_packing_count=1,
         parent_ids=[job_queue.id],
         parameters={
-            "pdomain": site_def.PDOMAIN,
             "input_filename": data_dir + item[0],
         },
+        launch_params={"-p": str(site_def.PDOMAIN)},
     )
     for item in file_dict.items()
 ]
@@ -82,7 +82,8 @@ job_process = Job.objects.create(
     threads_per_core=1,
     node_packing_count=1,
     parent_ids=[job.id for job in job_load],
-    parameters={"pdomain": site_def.PDOMAIN, "client_hwthreads_perrank": 2},
+    parameters={"client_hwthreads_perrank": 2},
+    launch_params={"-p": str(site_def.PDOMAIN)},
 )
 assert job_process.id is not None
 
@@ -97,6 +98,6 @@ job_shutdown = Job.objects.create(
     threads_per_core=1,
     node_packing_count=1,
     parent_ids=[job_process.id],
-    parameters={"pdomain": site_def.PDOMAIN},
+    launch_params={"-p": str(site_def.PDOMAIN)},
 )
 assert job_shutdown.id is not None

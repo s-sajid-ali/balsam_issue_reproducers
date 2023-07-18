@@ -15,7 +15,8 @@ job_server = Job.objects.create(
     threads_per_rank=2,
     threads_per_core=1,
     node_packing_count=1,
-    parameters={"pdomain": site_def.PDOMAIN, "hepnos_config": hepnos_config_file},
+    parameters={"hepnos_config": hepnos_config_file},
+    launch_params={"-p": str(site_def.PDOMAIN)},
 )
 
 assert job_server.id is not None
